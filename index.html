@@ -12,28 +12,55 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            background-color: #f4f4f4;
+            background: #f4f4f4;
             font-family: Arial, sans-serif;
         }
+
         h1 {
-            margin-top: 10px;
+            margin: 20px 0 10px 0;
             color: #333;
         }
-        p {
-            margin-bottom: 10px;
-            color: #555;
-        }
-        .tradingview_container {
+
+        .chart-card {
             width: 90vw;
+            margin: 20px 0;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+        }
+
+        .chart-header {
+            padding: 14px 20px;
+            background: linear-gradient(90deg, #1f2937, #374151);
+            color: #fff;
+            font-size: 22px;
+            font-weight: bold;
+            letter-spacing: 0.3px;
+        }
+
+        .tradingview_container {
+            width: 100%;
             height: 800px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            background-color: #fff;
+            background: #fff;
+        }
+
+        @media (max-width: 768px) {
+            .chart-header {
+                font-size: 18px;
+                padding: 12px 16px;
+            }
+
+            .tradingview_container {
+                height: 600px;
+            }
         }
     </style>
+
     <script>
         function checkPassword() {
-            const password = "tajnehaslo"; 
+            const password = "tajnehaslo";
             let userInput = prompt("Podaj hasło dostępu:");
             if (userInput !== password) {
                 alert("Niepoprawne hasło. Dostęp zabroniony.");
@@ -44,13 +71,12 @@
 </head>
 <body onload="checkPassword()">
     <h1>TradingView - Wskaźniki</h1>
-    
-    <!-- Skrypt TradingView -->
+
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
-    
+
     <script type="text/javascript">
         const widgets = [
-            { name: "Sniper Pro", studies: ["PUB;6c003d30b2154ef3a31074d5c703954f", "PUB;e6adb5e5246c43f4a8dcffde5c98db4e", "PUB;162198dcae874d5da28f7b048feb76e7", "PUB;b6587ba7dc7b4489927cfd94d1fb8a9f", "PUB;0bf15eb0edba447f84e19fce69391ccb"] },         
+            { name: "Sniper Pro", studies: ["PUB;6c003d30b2154ef3a31074d5c703954f", "PUB;e6adb5e5246c43f4a8dcffde5c98db4e", "PUB;162198dcae874d5da28f7b048feb76e7", "PUB;b6587ba7dc7b4489927cfd94d1fb8a9f", "PUB;0bf15eb0edba447f84e19fce69391ccb"] },
             { name: "Nexus", studies: ["PUB;ae6d252afb6d44a68ddd3b4d587388f4"] },
             { name: "Golden Era New", studies: ["PUB;51017c1544164998b0fbb32d5463961c"] },
             { name: "Golden Era", studies: ["PUB;0b373fb0e6634a73bc8b838cf0690725"] },
@@ -73,21 +99,31 @@
             { name: "LUX Support and Resistance", studies: ["PUB;NXS6SoOdr880Hrvh9vA36UcAjC14bOkc"] },
             { name: "Vumacha", studies: ["PUB;uA35GeckoTA2EfgI63SD2WCSmca4njxp"] }
         ];
-        
+
         widgets.forEach((widget, index) => {
+            const card = document.createElement("div");
+            card.className = "chart-card";
+
+            const header = document.createElement("div");
+            header.className = "chart-header";
+            header.textContent = widget.name;
+
             const container = document.createElement("div");
             container.className = "tradingview_container";
             container.id = "tradingview_chart_" + index;
-            document.body.appendChild(container);
-            
+
+            card.appendChild(header);
+            card.appendChild(container);
+            document.body.appendChild(card);
+
             new TradingView.widget({
                 container_id: container.id,
                 width: "100%",
-                height: "800px",
-                symbol: "OANDA:XAUUSD",  
-                interval: "5",  
+                height: "100%",
+                symbol: "OANDA:XAUUSD",
+                interval: "5",
                 timezone: "Etc/UTC",
-                theme: "light", 
+                theme: "light",
                 style: "1",
                 locale: "pl",
                 toolbar_bg: "#f1f3f6",
@@ -97,15 +133,13 @@
                 enable_publishing: true,
                 allow_symbol_change: true,
                 hide_volume: false,
-                autosize: true, 
+                autosize: true,
                 studies: widget.studies
             });
         });
     </script>
 </body>
 </html>
-
-
 
 
 
